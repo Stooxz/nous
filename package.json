@@ -1,0 +1,26 @@
+{
+  "name": "nous",
+  "version": "1.0.0",
+  "description": "Notre petit coin : photos chiffrées et studio photomaton",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "encrypt": "node scripts/encrypt.mjs"
+  },
+  "author": "Bertrand",
+  "type": "module",
+  "dependencies": {
+    "@fontsource/dancing-script": "^5.3.0",
+    "@fontsource/nunito": "^5.3.0",
+    "@fontsource/playfair-display": "^5.3.0",
+    "jspdf": "^4.2.1"
+  },
+  "devDependencies": {
+    "heic-convert": "^2.1.0",
+    "sharp": "^0.35.5",
+    "typescript": "^7.0.2",
+    "vite": "^8.4.0"
+  },
+  "private": true
+}

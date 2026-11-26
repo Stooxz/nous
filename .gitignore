@@ -1,0 +1,18 @@
+# Photos originales et message en clair : JAMAIS dans le dépôt
+photos-src/
+content/
+# Filet de sécurité : aucune image en clair n'est commitée
+*.jpg
+*.jpeg
+*.png
+*.heic
+*.heif
+*.webp
+*.gif
+*.pdf
+
+node_modules/
+dist/
+
+.claude/
+CAHIER-DES-CHARGES.md

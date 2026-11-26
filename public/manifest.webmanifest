@@ -1,0 +1,11 @@
+{
+  "name": "Nous",
+  "short_name": "Nous",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#5a1426",
+  "theme_color": "#5a1426",
+  "lang": "fr",
+  "icons": [{ "src": "icone.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
+}
