@@ -21,6 +21,22 @@ Les photos sont **chiffrées sur ton PC** avant d'être publiées. Le dépôt es
 
 `photos-src/` et `content/` ne sont **jamais** envoyés sur GitHub (ils sont dans `.gitignore`).
 
+## Le morceau du 25 décembre
+
+1. Mets ton enregistrement dans `photos-src/audio/` (MP3 ou M4A, par exemple `piano.mp3`). Un seul morceau à la fois.
+2. Écris le titre et la dédicace dans `photos-src/noel.json` (il est créé au premier `npm run encrypt`) :
+
+   ```json
+   { "titre": "Pour toi", "dedicace": "Joyeux Noël, mon amour." }
+   ```
+3. Relance `npm run encrypt` avec **le même mot de passe**, puis mets en ligne (ci-dessous). À faire **avant le 24 décembre au soir**.
+
+Le morceau est chiffré comme les photos. Le lien direct à lui envoyer : `https://stooxz.github.io/nous/#/noel`. Avant le 25 décembre à minuit (heure de Paris), elle ne voit qu'un compte à rebours ; ensuite, le lecteur et le bouton « Télécharger le morceau ». Si le morceau n'est pas encore en ligne, elle lit « Le morceau arrive très bientôt ».
+
+S'il pèse plus de 20 Mo, le script te prévient : exporte-le en MP3 à 192 kb/s.
+
+Pour l'essayer avant le 25 sur ton PC : `npm run dev`, puis ouvre `http://localhost:5173/nous/?simuler=2026-12-25#/noel`. Ça ne marche pas sur le site en ligne.
+
 ## Mettre en ligne
 
 ```
@@ -30,7 +46,7 @@ git commit -m "Photos"
 git push
 ```
 
-Avant le commit, `git status` ne doit lister **aucune** photo (.jpg, .png, .heic) : seulement des fichiers dans `public/data/`.
+Avant le commit, `git status` ne doit lister **aucune** photo (.jpg, .png, .heic) ni musique (.mp3, .m4a) : seulement des fichiers dans `public/data/`.
 
 Après le push, GitHub publie le site tout seul en une ou deux minutes, sur `https://<ton-pseudo>.github.io/nous/`.
 

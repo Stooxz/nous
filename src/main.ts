@@ -9,12 +9,14 @@ import { afficherAccueil } from './accueil';
 import { afficherGalerie } from './galerie';
 import { afficherStudio } from './studio';
 import { afficherCreations } from './creations';
+import { afficherNoel } from './noel';
 
 const icone = (d: string) => `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${d}"/></svg>`;
 const VUES = {
   galerie: { nom: 'Photos', icone: 'M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z', afficher: afficherGalerie },
   studio: { nom: 'Studio', icone: 'M8 2h8v20H8zM10 4v4h4V4zm0 6v4h4v-4zm0 6v4h4v-4z', afficher: afficherStudio },
   creations: { nom: 'Créations', icone: 'M12 21C6 16.5 2.5 13 2.5 8.8 2.5 5.9 4.8 3.6 7.6 3.6c1.8 0 3.4.9 4.4 2.4 1-1.5 2.6-2.4 4.4-2.4 2.8 0 5.1 2.3 5.1 5.2 0 4.2-3.5 7.7-9.5 12.2z', afficher: afficherCreations },
+  noel: { nom: 'Noël', icone: 'M9 3v11.4A3.6 3.6 0 1 0 11 17.6V8h6V3z', afficher: afficherNoel },
   mot: { nom: 'Le mot', icone: 'M3 5h18v14H3zm2 2v.5l7 5 7-5V7l-7 5z', afficher: afficherMot },
 } as const;
 type Vue = keyof typeof VUES;
@@ -22,8 +24,8 @@ type Vue = keyof typeof VUES;
 const app = $('#app');
 
 function router() {
-  if (!estOuvert()) return afficherAccueil(app, () => (location.hash === '#galerie' ? router() : (location.hash = '#galerie')));
-  let vue = location.hash.slice(1) as Vue;
+  if (!estOuvert()) return afficherAccueil(app, router);
+  let vue = location.hash.replace(/^#\/?/, '') as Vue; // #noel ou #/noel
   if (!(vue in VUES) || (vue === 'mot' && !manifeste?.message)) vue = 'galerie';
   const liens = (Object.keys(VUES) as Vue[])
     .filter((v) => v !== 'mot' || manifeste?.message)

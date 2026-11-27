@@ -11,6 +11,9 @@ const SRC = 'photos-src';
 const OUT = 'public/data';
 const LEGENDES = `${SRC}/legendes.json`;
 const MESSAGE = 'content/message.md';
+const AUDIO = `${SRC}/audio`;
+const NOEL = `${SRC}/noel.json`;
+const SONS = { '.mp3': 'audio/mpeg', '.m4a': 'audio/mp4', '.aac': 'audio/aac' };
 const CATEGORIES = ['nous', 'mon-copain'];
 const ITERATIONS = 600_000;
 const EXT = /\.(jpe?g|png|heic|heif|webp|avif|tiff?)$/i;
@@ -89,8 +92,21 @@ if (!(await existe(MESSAGE))) {
 }
 const message = (await readFile(MESSAGE, 'utf8')).replace(/<!--[\s\S]*?-->/g, '').trim();
 
+// --- 3 bis. morceau de piano du 25 décembre (facultatif) ---
+await mkdir(AUDIO, { recursive: true });
+if (!(await existe(NOEL))) await writeFile(NOEL, JSON.stringify({ titre: 'Pour toi', dedicace: 'Joyeux Noël, mon amour.' }, null, 2) + '\n');
+const noelTextes = JSON.parse(await readFile(NOEL, 'utf8'));
+const sons = (await readdir(AUDIO)).filter((f) => SONS[f.slice(f.lastIndexOf('.')).toLowerCase()]).sort(triNaturel);
+if (sons.length > 1) console.log(`Plusieurs morceaux dans ${AUDIO}/ : seul « ${sons[0]} » est utilisé.`);
+const son = sons[0] && { nom: sons[0], donnees: await readFile(`${AUDIO}/${sons[0]}`) };
+if (son && son.donnees.length > 20e6) {
+  console.log(`\nAttention : ${son.nom} pèse ${(son.donnees.length / 1e6).toFixed(0)} Mo (plus de 20 Mo), il sera long à charger sur son téléphone.`);
+  console.log('Pour le réduire : exporte-le en MP3 à 192 kb/s (dans Audacity : Fichier → Exporter → MP3, qualité 192 kb/s),');
+  console.log('ou en ligne de commande : ffmpeg -i piano.wav -b:a 192k piano.mp3. Un morceau de 5 minutes fait alors environ 7 Mo.\n');
+}
+
 // --- 4. mot de passe ---
-console.log(`${photos.length} photo(s) trouvée(s).`);
+console.log(`${photos.length} photo(s) trouvée(s)${son ? `, et le morceau « ${son.nom} »` : ''}.`);
 const mdp = await demander('Mot de passe : ');
 if (normaliser(mdp).length < 3) { console.log('Mot de passe trop court.'); process.exit(1); }
 if ((await demander('Encore une fois : ')) !== mdp) { console.log('Les deux mots de passe sont différents. Rien n\'a été changé.'); process.exit(1); }
@@ -116,7 +132,14 @@ const cle = await deriverCle(mdp, sel, ITERATIONS);
 // --- 5. photos : redimensionnées, sans métadonnées, chiffrées ---
 const fichiers = new Map();
 const utilises = new Set();
-const manifeste = { version: 1, photos: [], message };
+const manifeste = { version: 1, photos: [], message, noel: null };
+if (son) {
+  // Nom aléatoire : rien dans le dépôt ne dit qu'il s'agit d'un morceau.
+  const fichier = `${randomBytes(8).toString('hex')}.bin`;
+  fichiers.set(fichier, await chiffrer(cle, son.donnees));
+  const ext = son.nom.slice(son.nom.lastIndexOf('.')).toLowerCase();
+  manifeste.noel = { fichier, type: SONS[ext], nom: `${(noelTextes.titre || 'piano').replace(/[\\/:*?"<>|]/g, '').trim() || 'piano'}${ext}`, titre: noelTextes.titre ?? '', dedicace: noelTextes.dedicace ?? '' };
+}
 for (const [i, p] of photos.entries()) {
   process.stdout.write(`\r${i + 1}/${photos.length} ${p.src}`.padEnd(70));
   let entree = await readFile(`${SRC}/${p.src}`);
@@ -144,6 +167,6 @@ const meta = { version: 1, kdf: 'PBKDF2-SHA256', iterations: ITERATIONS, salt: s
 await writeFile(`${OUT}/meta.json`, JSON.stringify(meta, null, 2) + '\n');
 
 const n = (c) => manifeste.photos.filter((p) => p.cat === c).length;
-console.log(`\n\nC'est fait ! ${n('nous')} photo(s) « Nous », ${n('mon-copain')} « Mon copain »${message ? ', et le mot de la fin' : ''}.`);
+console.log(`\n\nC'est fait ! ${n('nous')} photo(s) « Nous », ${n('mon-copain')} « Mon copain »${message ? ', le mot de la fin' : ''}${son ? ', et le morceau du 25 décembre' : ''}.`);
 console.log('Étape suivante : git add -A, git commit -m "Photos", git push');
 lignes && process.exit(0);

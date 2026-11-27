@@ -16,3 +16,9 @@ dist/
 
 .claude/
 CAHIER-DES-CHARGES.md
+
+# Musique en clair : jamais dans le dépôt
+*.mp3
+*.m4a
+*.aac
+*.wav

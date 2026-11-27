@@ -2,7 +2,8 @@ import { normaliser } from './motdepasse.js';
 
 export type Categorie = 'nous' | 'mon-copain';
 export type Photo = { id: string; cat: Categorie; w: number; h: number; legende: string; date: string };
-type Manifeste = { version: number; photos: Photo[]; message: string };
+export type Noel = { fichier: string; type: string; nom: string; titre: string; dedicace: string };
+type Manifeste = { version: number; photos: Photo[]; message: string; noel?: Noel | null };
 
 const DOSSIER = import.meta.env.BASE_URL + 'data/';
 export const NOMS: Record<Categorie, string> = { nous: 'Nous', 'mon-copain': 'Mon copain' };
@@ -40,6 +41,9 @@ export async function ouvrir(motDePasse: string): Promise<boolean> {
 export const estOuvert = () => cle !== null;
 export const photo = (id: string) => manifeste?.photos.find((p) => p.id === id);
 export const photosDe = (cat: Categorie) => manifeste?.photos.filter((p) => p.cat === cat) ?? [];
+
+/** Le morceau du 25 décembre, déchiffré en mémoire. */
+export const morceau = async (n: Noel) => new Blob([await dechiffrer(cle!, await lire(n.fichier))], { type: n.type });
 
 const urls = new Map<string, Promise<string>>();
 /** URL locale (blob:) d'une photo déchiffrée à la volée ; mini = version légère pour la grille. */

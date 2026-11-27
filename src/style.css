@@ -239,3 +239,39 @@ textarea { width: 100%; border: 1.5px solid var(--ligne); border-radius: 12px; p
   #impression { display: flex !important; justify-content: center; }
   #impression img { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
 }
+
+/* ---------- Le 25 décembre ---------- */
+.scene-noel {
+  position: relative; overflow: hidden; min-height: calc(100svh - var(--menu) - 32px); border-radius: 24px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; padding: 32px 18px; text-align: center;
+  background: radial-gradient(circle at 30% 15%, #93344b, #5a1426 55%, #3a0b18); color: #fdf1ec;
+}
+.scene-noel h1 { color: #fdf1ec; font-size: clamp(2.4rem, 11vw, 3.4rem); position: relative; }
+.attente { margin: 0; max-width: 30ch; font-size: 1.15rem; position: relative; white-space: pre-line; }
+.rebours { display: flex; gap: 8px; position: relative; }
+.rebours div { min-width: 70px; padding: 10px 4px; border-radius: 14px; background: rgba(255, 255, 255, .08); border: 1px solid rgba(255, 255, 255, .16); }
+.rebours span { display: block; font: 600 2rem/1.1 'Playfair Display', serif; font-style: italic; font-variant-numeric: tabular-nums; }
+.rebours small { font-size: .8rem; opacity: .9; }
+.clavier { width: min(100%, 340px); position: relative; filter: drop-shadow(0 6px 14px rgba(0, 0, 0, .3)); }
+.touche { fill: var(--papier); }
+.touche.noire { fill: var(--encre); }
+.joue .touche { animation: allume 1.8s calc((var(--i) * 37 % 11) * -.17s) infinite; }
+.ouvre .clavier .touche { animation: vague .5s calc(var(--i) * 50ms) both; }
+.ouvre.joue .touche { animation: allume 1.8s calc((var(--i) * 37 % 11) * -.17s) infinite; }
+@keyframes allume { 0%, 70%, 100% { fill: var(--papier); } 80% { fill: var(--rose); } }
+.noire { --papier: var(--encre); --rose: var(--rose-vif); }
+@keyframes vague { 40% { fill: var(--rose); } }
+.lecteur { position: relative; width: min(100%, 360px); display: grid; gap: 8px; justify-items: center; animation: apparait 1s .7s both; }
+.lire {
+  width: 84px; height: 84px; border-radius: 50%; border: 0; display: grid; place-items: center;
+  background: var(--rose); color: var(--nuit); box-shadow: 0 8px 22px rgba(0, 0, 0, .3);
+}
+.lire svg { width: 40px; height: 40px; fill: currentColor; }
+.lire:disabled { opacity: .5; }
+.progres { width: 100%; min-height: 44px; accent-color: var(--rose); }
+.temps { width: 100%; display: flex; justify-content: space-between; font-variant-numeric: tabular-nums; margin-top: -8px; }
+.statut-noel { min-height: 1.5em; margin: 0; font-weight: 700; }
+.telecharger { margin-top: 4px; }
+@media (prefers-reduced-motion: reduce) {
+  .joue .touche, .ouvre .clavier .touche, .ouvre.joue .touche, .lecteur { animation: none; }
+}
